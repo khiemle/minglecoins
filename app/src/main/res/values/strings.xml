@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mingle Coins</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_coins">Coins</string>
+    <string name="title_favourite">Favourite</string>
+</resources>
