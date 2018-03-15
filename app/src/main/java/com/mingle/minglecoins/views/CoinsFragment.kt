@@ -16,7 +16,7 @@ import com.mingle.minglecoins.databinding.FragmentCoinsBinding
 import com.mingle.minglecoins.models.Coin
 import com.mingle.minglecoins.viewmodels.CoinsViewModel
 import android.support.v7.widget.DividerItemDecoration
-
+import com.bumptech.glide.Glide
 
 
 class CoinsFragment : Fragment() {
@@ -25,12 +25,12 @@ class CoinsFragment : Fragment() {
     private lateinit var binding: FragmentCoinsBinding
     private lateinit var adapter: CoinsRecyclerViewAdapter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_coins, container, false)
         val coinsViewModel = ViewModelProviders.of(this).get(CoinsViewModel::class.java)
         binding.coinsViewModel  = coinsViewModel
-        adapter = CoinsRecyclerViewAdapter(arrayListOf())
+        adapter = CoinsRecyclerViewAdapter(arrayListOf(), Glide.with(this))
         binding.rvCoins.layoutManager = LinearLayoutManager(context)
         binding.rvCoins.adapter = adapter
         binding.rvCoins.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
