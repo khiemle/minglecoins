@@ -13,5 +13,11 @@ class CoinRepository {
         }
     }
 
-
+    fun getPrice(symbols: List<String>) : Observable<Resource<List<Price>>> {
+        return coinRemoteDataSource.getPrices(symbols).flatMap {
+            val lstPrice = it.prices
+            val resource = Resource<List<Price>>(Status.SUCCESS, lstPrice)
+            return@flatMap Observable.just(resource)
+        }
+    }
 }

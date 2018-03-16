@@ -1,5 +1,6 @@
 package com.mingle.minglecoins.models
 import com.google.gson.annotations.SerializedName
+import com.mingle.minglecoins.models.repository.Price
 
 data class Coin(
     @field:SerializedName("Symbol")
@@ -45,7 +46,9 @@ data class Coin(
     val sponsored: Boolean? = null,
 
     @field:SerializedName("CoinName")
-    val coinName: String? = null
+    val coinName: String? = null,
+
+    var price: Price? = null
 )
 
 

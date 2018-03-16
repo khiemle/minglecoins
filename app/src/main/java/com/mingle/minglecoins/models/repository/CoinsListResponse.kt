@@ -1,6 +1,5 @@
 package com.mingle.minglecoins.models.repository
 
-import android.util.Log
 import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import com.mingle.minglecoins.models.Coin
@@ -11,13 +10,15 @@ class CoinsListResponseDeserializer : JsonDeserializer<CoinsListResponse> {
 	override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): CoinsListResponse? {
 		val gson = Gson()
 		json?.let {
-			val jsonObject = json.getAsJsonObject()
+			val jsonObject = json.asJsonObject
 			if (jsonObject.has("Data") && jsonObject.get("Data").isJsonObject) {
 				val dataJsonObject = jsonObject.getAsJsonObject("Data")
 				jsonObject.remove("Data")
 
 				val dataJsonArrayObject = JsonArray()
+				val symbolsArrayObject = JsonArray()
 				dataJsonObject.keySet().forEach {
+					symbolsArrayObject.add(it)
 					if (dataJsonObject.has(it) && dataJsonObject.get(it).isJsonObject) {
 						val coinJsonObject = dataJsonObject.getAsJsonObject(it)
 						dataJsonArrayObject.add(coinJsonObject)
@@ -25,6 +26,9 @@ class CoinsListResponseDeserializer : JsonDeserializer<CoinsListResponse> {
 				}
 				if (dataJsonArrayObject.size() > 0) {
 					jsonObject.add("Data", dataJsonArrayObject)
+				}
+				if (symbolsArrayObject.size() > 0) {
+					jsonObject.add("Symbols", symbolsArrayObject)
 				}
 
 			}
@@ -48,12 +52,12 @@ data class CoinsListResponse(
 	@field:SerializedName("Message")
 	val message: String? = null,
 
-	@field:SerializedName("DefaultWatchlist")
-	val defaultWatchlist: DefaultWatchlist? = null,
-
 	@field:SerializedName("BaseImageUrl")
 	val baseImageUrl: String? = null,
 
 	@field:SerializedName("Data")
-	val data: ArrayList<Coin>? = null
+	val data: ArrayList<Coin>? = null,
+
+	@field:SerializedName("Symbols")
+	val symbols: ArrayList<String>? = null
 )

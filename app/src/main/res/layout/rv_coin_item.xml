@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/tvName"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Price" />
+                tools:text="@{coinModel.price.usd}" />
 
 
 
