@@ -5,18 +5,17 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import com.bumptech.glide.Glide
 import com.mingle.minglecoins.R
 import com.mingle.minglecoins.databinding.FragmentCoinsBinding
 import com.mingle.minglecoins.models.Coin
 import com.mingle.minglecoins.viewmodels.CoinsViewModel
-import android.support.v7.widget.DividerItemDecoration
-import com.bumptech.glide.Glide
 
 
 class CoinsFragment : Fragment() {
@@ -35,13 +34,19 @@ class CoinsFragment : Fragment() {
         binding.rvCoins.adapter = adapter
         binding.rvCoins.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
-        coinsViewModel.getCoins()
-        coinsViewModel.coins.observe(this, Observer <List<Coin>>{
-            it?.let {
-                adapter.replaceData(it)
-                adapter.notifyDataSetChanged()
-            }
-        })
+        if (coinsViewModel.loadedCoinList()) {
+            coinsViewModel.getPrices()
+        } else {
+            coinsViewModel.getCoins()
+            coinsViewModel.coins.observe(this, Observer <List<Coin>>{
+                it?.let {
+                    adapter.replaceData(it)
+                    adapter.notifyDataSetChanged()
+                    coinsViewModel.getPrices()
+                }
+            })
+        }
+
         return binding.root
     }
 

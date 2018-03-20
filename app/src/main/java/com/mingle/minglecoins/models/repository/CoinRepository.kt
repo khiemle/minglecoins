@@ -3,6 +3,7 @@ package com.mingle.minglecoins.models.repository
 import com.mingle.minglecoins.models.Coin
 import io.reactivex.Observable
 
+
 class CoinRepository {
     private val coinRemoteDataSource = CoinRemoteDataSource()
     fun getCoins() : Observable<Resource<List<Coin>>> {
@@ -13,10 +14,9 @@ class CoinRepository {
         }
     }
 
-    fun getPrice(symbols: List<String>) : Observable<Resource<List<Price>>> {
-        return coinRemoteDataSource.getPrices(symbols).flatMap {
-            val lstPrice = it.prices
-            val resource = Resource<List<Price>>(Status.SUCCESS, lstPrice)
+    fun getPrice(symbol : String) : Observable<Resource<Price>> {
+        return coinRemoteDataSource.getPrice(symbol).flatMap {
+            val resource = Resource(Status.SUCCESS, it)
             return@flatMap Observable.just(resource)
         }
     }

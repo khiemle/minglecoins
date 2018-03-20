@@ -8,12 +8,15 @@ import com.mingle.minglecoins.models.repository.CoinRepository
 import com.mingle.minglecoins.models.repository.Price
 import com.mingle.minglecoins.models.repository.Resource
 import com.mingle.minglecoins.models.repository.Status
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
+import io.reactivex.subscribers.DisposableSubscriber
+
 
 operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
     add(disposable)
@@ -24,6 +27,13 @@ class CoinsViewModel : ViewModel() {
     val isLoading = ObservableField(false)
     private val coinRepository = CoinRepository()
     var coins = MutableLiveData<List<Coin>>()
+
+    fun loadedCoinList() : Boolean {
+        coins.value?.isNotEmpty()?.let {
+            return it
+        }
+        return false
+    }
 
     private val compositeDisposable = CompositeDisposable()
     fun getCoins() {
@@ -39,7 +49,6 @@ class CoinsViewModel : ViewModel() {
                     override fun onNext(result: Resource<List<Coin>>) {
                         if (result.status == Status.SUCCESS) {
                             coins.value = result.data
-                            getPrices()
                         }
                     }
 
@@ -51,31 +60,48 @@ class CoinsViewModel : ViewModel() {
     }
 
     fun getPrices() {
-        isLoading.set(true)
-        val symbols = ArrayList<String>()
-        coins.value?.forEach { coin ->
-            coin.name?.let { symbols.add(coin.name) }
-        }
-        val SYMBOLS_PER_PAGE = 50
-        var page = 0;
-        compositeDisposable += coinRepository.getPrice(symbols).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object  : DisposableObserver<Resource<List<Price>>>() {
-                    override fun onComplete() {
-                        isLoading.set(false)
+        coins.value?.let {
+            val source = Flowable.create<Int>({ emitter ->
+                for (i in 0..it.size) {
+                    if (!emitter.isCancelled) {
+                        emitter.onNext(i)
                     }
+                }
+                emitter.onComplete()
+            }, BackpressureStrategy.BUFFER)
 
-                    override fun onNext(result: Resource<List<Price>>) {
-                        if (result.status == Status.SUCCESS) {
-                            result.data?.mapIndexed { index, price -> coins.value?.get(index)?.price = price}
-                            coins.postValue(coins.value)
+            compositeDisposable += source.subscribeOn(Schedulers.newThread()).subscribeWith(object : DisposableSubscriber<Int>() {
+                        override fun onComplete() {
+
                         }
-                    }
 
-                    override fun onError(e: Throwable) {
-                    }
+                        override fun onNext(t: Int?) {
+                            val coin = coins.value?.get(t!!)
+                            coin?.name?.let {
+                                compositeDisposable += coinRepository.getPrice(it)
+                                        .subscribeOn(Schedulers.computation())
+                                        .subscribeWith(object : DisposableObserver<Resource<Price>>() {
+                                            override fun onComplete() {
+                                            }
 
-                })
+                                            override fun onNext(result: Resource<Price>) {
+                                                if (result.status == Status.SUCCESS) {
+                                                    coin.price = result.data
+                                                }
+                                            }
+
+                                            override fun onError(e: Throwable) {
+
+                                            }
+                                        })
+                            }
+                        }
+
+                        override fun onError(t: Throwable?) {
+
+                        }
+            })
+        }
     }
 
     override fun onCleared() {

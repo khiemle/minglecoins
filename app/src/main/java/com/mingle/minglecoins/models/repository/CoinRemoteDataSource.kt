@@ -24,6 +24,9 @@ interface CoinAPI {
 interface CoinAPIv2 {
     @GET("data/pricemulti")
     fun getPrices(@Query("fsyms") fsyms : String,@Query("tsyms") tsyms : String): Observable<PricesListResponse>
+
+    @GET("data/price")
+    fun getPrice(@Query("fsym") fsyms : String,@Query("tsyms") tsyms : String): Observable<Price>
 }
 
 class CoinRemoteDataSource {
@@ -73,12 +76,15 @@ class CoinRemoteDataSource {
         return coinAPI.getCoinList()
     }
 
+    fun getPrice(symbol : String) : Observable<Price> {
+        return coinAPIv2.getPrice(symbol, "USD")
+    }
+
     fun getPrices(symbols : List<String>) : Observable<PricesListResponse> {
         var fsyms = ""
-        (1..50).map {
-            fsyms = "$fsyms,${symbols[it]}"
-        }
-//        symbols.map { fsyms = "$fsyms,$it" }
+        symbols.map { symbol -> {
+            fsyms += ",$symbol"
+        }}
         fsyms = fsyms.substring(1)
         return coinAPIv2.getPrices(fsyms, "USD")
     }
