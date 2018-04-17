@@ -1,7 +1,6 @@
 version: 2
 jobs:
   accept_library_licenses:
-    working_directory: ~/code
             docker:
               - image: circleci/android:api-25-alpha
             environment:
@@ -10,7 +9,6 @@ jobs:
               - checkout
               - run: cp -r licenses/. $ANDROID_HOME/licenses
   running_test:
-    working_directory: ~/code
         docker:
           - image: circleci/android:api-25-alpha
         environment:
@@ -34,7 +32,6 @@ jobs:
           - store_test_results:
                     path: app/build/test-results
   build_release:
-    working_directory: ~/code
     docker:
       - image: circleci/android:api-25-alpha
     environment:
@@ -63,8 +60,12 @@ jobs:
     test:
       jobs:
         - accept_library_licenses
-        - running_test
-    build:
+        - running_test:
+          require:
+            - accept_library_licenses
+    build_release:
       jobs:
         - accept_library_licenses
-        - build_release
+        - build_release:
+          require:
+            - accept_library_licenses
