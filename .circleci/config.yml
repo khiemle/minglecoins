@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  build1:
     docker:
       - image: circleci/android:api-25-alpha
     steps:
@@ -11,12 +11,12 @@ jobs:
       - image: circleci/android:api-25-alpha
     steps:
       - checkout
-      - run: echo 'test
+      - run: echo 'test'
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
+      - build1
       - test
 
 #version: 2
