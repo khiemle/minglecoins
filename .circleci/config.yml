@@ -1,24 +1,3 @@
-#version: 2
-#jobs:
-#  build1:
-#    docker:
-#      - image: circleci/android:api-25-alpha
-#    steps:
-#      - checkout
-#      - run: echo 'build'
-#  test:
-#    docker:
-#      - image: circleci/android:api-25-alpha
-#    steps:
-#      - checkout
-#      - run: echo 'test'
-#workflows:
-#  version: 2
-#  build_and_test:
-#    jobs:
-#      - build1
-#      - test
-
 version: 2
 jobs:
   accept_library_licenses:
@@ -83,12 +62,12 @@ workflows:
   accept_library_licenses_and_running_test:
     jobs:
       - accept_library_licenses
-      - running_test
-
-
-#  build_release:
-#    jobs:
-#      - accept_library_licenses
-#      - build_release:
-#        require:
-#          - accept_library_licenses
+      - running_test:
+          requires:
+            - running_test
+  build_release:
+    jobs:
+      - accept_library_licenses
+      - build_release:
+          require:
+            - accept_library_licenses
