@@ -59,10 +59,10 @@ workflows:
   version: 2
   accept_library_licenses_and_running_test:
     jobs:
-      - accept_library_licenses
+      - accept_library_licenses:
       - running_test:
         require:
-          - accept_library_licenses
+          - accept_library_licenses:
 
 #  build_release:
 #    jobs:
