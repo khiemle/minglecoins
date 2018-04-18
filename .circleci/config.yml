@@ -19,6 +19,13 @@ jobs:
 #      - build1
 #      - test
 
+workflows:
+  version: 2
+  accept_library_licenses_and_running_test:
+    jobs:
+      - build1
+      - test
+
 #version: 2
 #jobs:
 #  accept_library_licenses:
@@ -78,14 +85,7 @@ jobs:
 #      - store_artifacts:
 #          path: app/build/outputs/apk/
 #          destination: apks/
-workflows:
-  version: 2
-  accept_library_licenses_and_running_test:
-    jobs:
-      - build1
-      - test:
-        require:
-          - build1
+
 
 #  build_release:
 #    jobs:
