@@ -64,10 +64,10 @@ workflows:
       - accept_library_licenses
       - running_test:
           requires:
-            - running_test
+            - accept_library_licenses
   build_release:
     jobs:
       - accept_library_licenses
       - build_release:
-          require:
+          requires:
             - accept_library_licenses
