@@ -37,10 +37,11 @@ android {
             minifyEnabled false
         }
         qa {
+            minifyEnabled false
             signingConfig signingConfigs.khiemle
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
