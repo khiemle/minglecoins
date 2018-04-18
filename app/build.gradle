@@ -17,6 +17,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        ext.betaDistributionNotifications = true
+        ext.betaDistributionReleaseNotes = "Notes\n" + getCommitMessages()
+        ext.betaDistributionGroupAliases = "android-test-group"
 
     }
     buildTypes {
@@ -25,6 +28,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+def getCommitMessages() {
+    def gitlog = 'git log 8cb6fb673cba081546d56260ebcc6963d0eaf509...HEAD --decorate'.execute().text
+    if (gitlog.trim().length() > 0) return gitlog
+    return 'git log -n 1 --decorate'.execute().text
 }
 
 dependencies {
