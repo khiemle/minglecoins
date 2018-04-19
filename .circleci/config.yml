@@ -59,15 +59,12 @@ jobs:
           destination: apks/
 workflows:
   version: 2
-  accept_library_licenses_and_running_test:
+  test_and_build:
     jobs:
       - accept_library_licenses
       - running_test:
           requires:
             - accept_library_licenses
-  build_release:
-    jobs:
-      - accept_library_licenses
       - build_release:
           requires:
-            - accept_library_licenses
+            - running_test
