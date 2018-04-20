@@ -17,10 +17,6 @@ echo "********************"
 echo "* save outputs     *"
 echo "********************"
 
-LINT_RESULT_DIR="$CIRCLE_ARTIFACTS"
-
-cp -v "app/build/reports/ktlint/ktlint-productionDebug.xml" "$LINT_RESULT_DIR/"
-
 if [ -z "${CI_PULL_REQUEST}" ]; then
     # when not pull request
     REPORTER=Saddler::Reporter::Github::CommitReviewComment
