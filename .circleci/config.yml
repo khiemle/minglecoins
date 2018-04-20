@@ -35,8 +35,11 @@ jobs:
                       destination: code_quality_results/
             - run:
                 name: Run Saddler to commit to pull request
-                command:
-                  - chmod +x app/code_quality_tools/run-gradle-android.sh | app/code_quality_tools/run-gradle-android.sh
+                command: chmod +x app/code_quality_tools/run-gradle-android.sh
+            - run:
+                name: Run Saddler to commit to pull request
+                command: app/code_quality_tools/run-gradle-android.sh
+
 
   running_test:
         docker:
