@@ -27,6 +27,6 @@ fi
 echo "********************"
 echo "* checkstyle       *"
 echo "********************"
-cat app/build/reports/checkstyle/checkstyle.xml \
+cat app/build/reports/ktlint/ktlint-productionDebug.xml \
     | checkstyle_filter-git diff origin/master \
     | saddler report --require saddler/reporter/github --reporter $REPORTER
