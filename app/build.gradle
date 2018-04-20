@@ -8,6 +8,8 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.akaita.android.easylauncher'
 
+apply from: './code_quality_tools/quality.gradle'
+
 android {
     signingConfigs {
         khiemle {

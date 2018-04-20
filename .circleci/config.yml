@@ -8,6 +8,35 @@ jobs:
             steps:
               - checkout
               - run: cp -r licenses/. $ANDROID_HOME/licenses
+  running_code_quality_tools:
+          docker:
+            - image: circleci/android:api-25-alpha
+          environment:
+            JVM_OPTS: -Xmx4G
+          steps:
+            - checkout
+            - restore_cache:
+                key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+            - run:
+               name: Chmod permissions
+               command: sudo chmod +x ./gradlew
+            - run:
+                name: Download Dependencies
+                command: ./gradlew androidDependencies
+            - save_cache:
+                paths:
+                  - ~/.gradle
+                key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+            - run:
+                name: Run code quality tools
+                command: ./gradlew ktlintCheck
+            - store_artifacts:
+                      path: app/build/reports/
+                      destination: code_quality_results/
+            - run:
+                name: Run Saddler to commit to pull request
+                command: ./code_quality_tools/run-gradle-android.sh
+
   running_test:
         docker:
           - image: circleci/android:api-25-alpha
@@ -18,7 +47,7 @@ jobs:
           - restore_cache:
               key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
           - run:
-             name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+             name: Chmod permissions
              command: sudo chmod +x ./gradlew
           - run:
               name: Download Dependencies
@@ -42,7 +71,7 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+         name: Chmod permissions
          command: sudo chmod +x ./gradlew
       - run:
           name: Download Dependencies
@@ -59,12 +88,18 @@ jobs:
           destination: apks/
 workflows:
   version: 2
-  test_and_build:
+  check_code_quality:
     jobs:
       - accept_library_licenses
-      - running_test:
+      - running_code_quality_tools:
           requires:
             - accept_library_licenses
-      - build_release:
-          requires:
-            - running_test
+#  test_and_build:
+#    jobs:
+#      - accept_library_licenses
+#      - running_test:
+#          requires:
+#            - accept_library_licenses
+#      - build_release:
+#          requires:
+#            - running_test
