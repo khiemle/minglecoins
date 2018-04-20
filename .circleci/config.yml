@@ -94,12 +94,12 @@ workflows:
       - running_code_quality_tools:
           requires:
             - accept_library_licenses
-  test_and_build:
-    jobs:
-      - accept_library_licenses
-      - running_test:
-          requires:
-            - accept_library_licenses
-      - build_release:
-          requires:
-            - running_test
+#  test_and_build:
+#    jobs:
+#      - accept_library_licenses
+#      - running_test:
+#          requires:
+#            - accept_library_licenses
+#      - build_release:
+#          requires:
+#            - running_test

@@ -14,16 +14,6 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "********************"
-echo "* exec gradle      *"
-echo "********************"
-./gradlew app:check
-
-if [ $? -ne 0 ]; then
-    echo 'Failed gradle check task.'
-    exit 1
-fi
-
-echo "********************"
 echo "* save outputs     *"
 echo "********************"
 
