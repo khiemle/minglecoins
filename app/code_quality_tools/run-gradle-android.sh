@@ -17,12 +17,9 @@ echo "********************"
 echo "* save outputs     *"
 echo "********************"
 
-LINT_RESULT_DIR="$CIRCLE_ARTIFACTS/lint"
+LINT_RESULT_DIR="$CIRCLE_ARTIFACTS"
 
-mkdir "$LINT_RESULT_DIR"
-cp -v "app/build/reports/checkstyle/checkstyle.xml" "$LINT_RESULT_DIR/"
-cp -v "app/build/reports/findbugs/findbugs.xml" "$LINT_RESULT_DIR/"
-cp -v "app/build/outputs/lint-results.xml" "$LINT_RESULT_DIR/"
+cp -v "app/build/reports/ktlint/ktlint-productionDebug.xml" "$LINT_RESULT_DIR/"
 
 if [ -z "${CI_PULL_REQUEST}" ]; then
     # when not pull request
