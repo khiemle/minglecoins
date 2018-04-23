@@ -20,6 +20,6 @@ ktlint {
     verbose = true
     android = true
     outputToConsole = true
-    reporters = ["PLAIN", "CHECKSTYLE"]
+    reporters = ["CHECKSTYLE"]
     ignoreFailures = true
 }
