@@ -10,7 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.bumptech.glide.Glide
 import com.mingle.minglecoins.R
 import com.mingle.minglecoins.databinding.FragmentCoinsBinding
@@ -23,6 +23,32 @@ class CoinsFragment : Fragment() {
 //    private var mListener: OnListFragmentInteractionListener? = null
     private lateinit var binding: FragmentCoinsBinding
     private lateinit var adapter: CoinsRecyclerViewAdapter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -46,6 +72,8 @@ class CoinsFragment : Fragment() {
                 }
             })
         }
+        
+        if (1>0) {}
 
         return binding.root
     }
